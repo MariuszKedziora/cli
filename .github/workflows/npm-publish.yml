@@ -1,0 +1,78 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Node.js Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: npm test
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+                      - nazwa: Instalator Java JDK
+  używa: action/setup-java@v4.2.1
+  z:
+    # Wersja Java do skonfigurowania. Pobiera całą lub semverową wersję Java. Zobacz przykłady obsługiwanej składni w pliku README
+    wersja Java: # opcjonalne
+    # Ścieżka do pliku `.java-version`. Zobacz przykłady obsługiwanej składni w pliku README
+    plik wersji Java: # opcjonalny
+    # Dystrybucja Java. Zobacz listę obsługiwanych dystrybucji w pliku README
+    dystrybucja:
+    # Typ pakietu (jdk, jre, jdk+fx, jre+fx)
+    Java-package: # opcjonalne, domyślnie jest to jdk
+    # Architektura pakietu (domyślnie jest to architektura Action Runnera)
+    architektura: # opcjonalna
+    # Ścieżka do miejsca, w którym znajduje się skompresowany pakiet JDK
+    jdkFile: # opcjonalny
+    # Ustaw tę opcję, jeśli chcesz, aby akcja sprawdzała dostępność najnowszej dostępnej wersji, która spełnia specyfikację wersji
+    sprawdź-najnowsze: # opcjonalne
+    # Identyfikator repozytorium distributionManagement w pliku pom.xml. Wartość domyślna to `github`
+    identyfikator serwera: # opcjonalnie, domyślnie jest to github
+    # Nazwa zmiennej środowiskowej dla nazwy użytkownika do uwierzytelnienia w repozytorium Apache Maven. Wartość domyślna to $GITHUB_ACTOR
+    nazwa_użytkownika serwera: # opcjonalne, domyślnie to GITHUB_ACTOR
+    # Nazwa zmiennej środowiskowej dla hasła lub tokena do uwierzytelnienia w repozytorium Apache Maven. Wartość domyślna to $GITHUB_TOKEN
+    hasło-serwera: # opcjonalne, domyślne to GITHUB_TOKEN
+    # Ścieżka do miejsca, w którym zostanie zapisany plik settings.xml. Wartość domyślna to ~/.m2.
+    ścieżka-ustawień: # opcjonalne
+    # Zastąp plik settings.xml, jeśli istnieje. Wartość domyślna to „true”.
+    overwrite-settings: # opcjonalne, wartość domyślna to true
+    # Klucz prywatny GPG do zaimportowania. Wartość domyślna to pusty ciąg.
+    gpg-private-key: # opcjonalne
+    # Nazwa zmiennej środowiskowej dla hasła klucza prywatnego GPG. Wartość domyślna to $GPG_PASSPHRASE.
+    gpg-passphrase: # opcjonalne
+    # Nazwa platformy kompilacji do buforowania zależności. Może to być „maven”, „gradle” lub „sbt”.
+    pamięć podręczna: # opcjonalna
+    # Ścieżka do pliku zależności: pom.xml, build.gradle, build.sbt itp. Tej opcji można używać z opcją `cache`. Jeżeli opcja ta zostanie pominięta, akcja będzie szukać pliku zależności w całym repozytorium. Ta opcja obsługuje symbole wieloznaczne i listę nazw plików do buforowania wielu zależności.
+    ścieżka-zależności od pamięci podręcznej: # opcjonalne
+    # Obejście umożliwiające przekazanie statusu zadania do etapu opublikowania zadania. Ta zmienna nie jest przeznaczona do ustawiania ręcznego
+    status-zadania: # opcjonalny, domyślny to ${{job.status }}
+    # Token używany do uwierzytelniania podczas pobierania manifestów wersji hostowanych na github.com, na przykład w przypadku kompilacji Microsoft OpenJDK. Podczas uruchamiania tej akcji na github.com wystarczająca jest wartość domyślna. Podczas korzystania z GHES możesz przekazać osobisty token dostępu do github.com, jeśli doświadczasz ograniczeń szybkości.
+    token: # opcjonalny, domyślny to ${{ github.server_url == 'https://github.com' && github.token || '' }}
+    # Nazwa identyfikatora Maven Toolchain, jeśli domyślna nazwa „${distribution}_${java-version}” nie jest pożądana. Zobacz przykłady obsługiwanej składni w pliku Advanced Usage
+    mvn-toolchain-id: # opcjonalne
+    # Nazwa dostawcy Maven Toolchain, jeśli domyślna nazwa „${distribution}” nie jest pożądana. Zobacz przykłady obsługiwanej składni w pliku Advanced Usage
+    mvn-toolchain-vendor: # opcjonalne
+          
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
